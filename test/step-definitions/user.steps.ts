@@ -62,7 +62,7 @@ export class UserSteps {
   }
 
   @then(/the user creation response should contain:/)
-  public GetUserResponseContainsStatus(table: any) {
+  public createUserResponseContains(table: any) {
     const resultObj = table.rowsHash();
     const expectedFirstname = resultObj.firstName;
     assert.equal(this.context.response.body.firstName, expectedFirstname);
@@ -70,5 +70,68 @@ export class UserSteps {
     assert.equal(this.context.response.body.email, resultObj.email);
     assert.exists(this.context.response.body.id);
     assert.isString(this.context.response.body.id);
+  }
+
+  @when(/I make get request to get user with id "([^"]*)"/)
+  public async callToGetUserEndpoint(userId: string) {
+    const endpoint = `/api/user/${userId}`;
+    this.context.response = await request(this.context.app.getHttpServer()).get(
+      `${endpoint}`,
+    );
+  }
+
+  @then(/the get user response status code should be (\d+)/)
+  public assertGetUserById(statusCode: number) {
+    assert.equal(this.context.response.status, statusCode);
+  }
+
+  @then(/the get user response should contain:/)
+  public getUserByIdResponse(table: any) {
+    const resultObj = table.rowsHash();
+    const expectedId = resultObj.id;
+    assert.equal(this.context.response.body.id, expectedId);
+    assert.exists(this.context.response.body.firstName);
+    assert.exists(this.context.response.body.lastName);
+    assert.exists(this.context.response.body.avatar);
+    assert.exists(this.context.response.body.email);
+  }
+
+  @when(/I make get request to get avatar of user with id "([^"]*)"/)
+  public async callToGetUserAvatarEndpoint(userId: string) {
+    const endpoint = `/api/user/${userId}/avatar`;
+    this.context.response = await request(this.context.app.getHttpServer()).get(
+      `${endpoint}`,
+    );
+  }
+
+  @then(/the get avatar response status code should be (\d+)/)
+  public assertGetUserAvatarById(statusCode: number) {
+    assert.equal(this.context.response.status, statusCode);
+  }
+
+  @then(/the get avatar response should contain:/)
+  public getUserAvatarByIdResponse(table: any) {
+    assert.exists(this.context.response.body.avatar);
+    assert.isString(this.context.response.body.avatar);
+    assert.isNotEmpty(this.context.response.body.avatar);
+  }
+
+  @when(/I make a delete request the avatar of user with id "([^"]*)"/)
+  public async callToDeleteAvatarAvatarEndpoint(userId: string) {
+    const endpoint = `/api/user/${userId}/avatar`;
+    this.context.response = await request(
+      this.context.app.getHttpServer(),
+    ).delete(`${endpoint}`);
+  }
+
+  @then(/the avatar deletion response status code should be (\d+)/)
+  public assertDeleteAvatarAvatarById(statusCode: number) {
+    assert.equal(this.context.response.status, statusCode);
+  }
+
+  @then(/the delete avatar response should contain:/)
+  public deleteUserAvatarByIdResponse(table: any) {
+    assert.exists(this.context.response.body.deleted);
+    assert.equal(this.context.response.body.deleted, true);
   }
 }

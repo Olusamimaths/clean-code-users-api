@@ -47,7 +47,7 @@ export class UserUseCase {
     try {
       const result = await this.dataServices.avatars.getOne({ userId });
       if (!result) return true;
-      await this.dataServices.avatars.delete(userId);
+      await this.dataServices.avatars.deleteOne({ userId });
       await this.fileService.deleteFile(result.hash);
       return true;
     } catch (error) {

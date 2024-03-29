@@ -1,9 +1,9 @@
 export class GetAvatarResponse {
-  base64: string;
+  avatar: string;
 
   public static from(base64: string): GetAvatarResponse {
     const response = new GetAvatarResponse();
-    response.base64 = base64;
+    response.avatar = base64;
 
     return response;
   }

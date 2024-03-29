@@ -13,12 +13,10 @@ export class ReqresService implements IReqresService {
   ) {}
 
   async get(id: string): Promise<User> {
-    console.log(this.httpService);
     const reqresUrl = this.configService.get<string>('reqres.url');
     const response = await this.httpService.get<User>(
       `${reqresUrl}/users/${id}`,
     );
-    console.log(response);
     if (response.status !== HttpStatus.OK) throw new Error('User not found');
     const user = this._createEntityFromResponse(response);
     return user;

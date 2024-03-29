@@ -41,4 +41,8 @@ export class MongoBaseRepository<T> implements IGenericRepository<T> {
   delete(id: string) {
     return this._repository.findByIdAndDelete(id);
   }
+
+  deleteOne(query: any) {
+    return this._repository.findOneAndDelete(query);
+  }
 }
