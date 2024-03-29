@@ -1,4 +1,5 @@
 Feature: Health Check
+    As a user, I want to check the health of the application, so that I can know if the application is running properly.
 
     Scenario: Health Check
     When I make a GET request to "/health"
