@@ -6,6 +6,9 @@ import { ConfigModule } from '@nestjs/config';
 import { AllExceptionsFilter } from './exception-filters';
 import { getEnvFileName } from './config';
 import { configuration, validationSchema } from '@config/index';
+import { UserModule } from './use-cases/user/user.module';
+import { DataServicesModule } from './services/data-services/data-services.module';
+import { MongoDataServicesModule } from './frameworks/data-services/mongo/mongo-data-services.module';
 
 @Module({
   imports: [
@@ -15,6 +18,9 @@ import { configuration, validationSchema } from '@config/index';
       load: [configuration],
       validationSchema,
     }),
+    UserModule,
+    DataServicesModule,
+    MongoDataServicesModule,
   ],
   controllers: [AppController],
   providers: [
