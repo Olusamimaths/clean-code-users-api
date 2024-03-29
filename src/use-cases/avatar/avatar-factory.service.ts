@@ -7,6 +7,7 @@ export class AvatarFactoryService {
   createNewAvatar(createAvatarDto: CreateAvatarDto): Avatar {
     const newAvatar = new Avatar();
     newAvatar.userId = createAvatarDto.userId;
+    newAvatar.hash = createAvatarDto.hash;
     return newAvatar;
   }
 }

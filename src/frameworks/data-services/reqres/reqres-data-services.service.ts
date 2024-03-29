@@ -2,20 +2,23 @@ import { IReqresService } from '@/core/abstracts';
 import { HttpService } from '@/lib';
 import { User } from '@/core/entities';
 import { ConfigService } from '@nestjs/config';
-import { HttpStatus } from '@nestjs/common';
+import { HttpStatus, Injectable } from '@nestjs/common';
 import { IHttpResponse } from '@/lib/http-service/types';
 
+@Injectable()
 export class ReqresService implements IReqresService {
   constructor(
     private readonly httpService: HttpService,
     private readonly configService: ConfigService,
   ) {}
 
-  async get(id: number): Promise<User> {
+  async get(id: string): Promise<User> {
+    console.log(this.httpService);
     const reqresUrl = this.configService.get<string>('reqres.url');
     const response = await this.httpService.get<User>(
       `${reqresUrl}/users/${id}`,
     );
+    console.log(response);
     if (response.status !== HttpStatus.OK) throw new Error('User not found');
     const user = this._createEntityFromResponse(response);
     return user;

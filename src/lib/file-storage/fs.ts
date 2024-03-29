@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import * as fs from 'fs';
-import crypto from 'crypto';
+import * as crypto from 'crypto';
 import * as path from 'path';
 import { Readable } from 'stream';
 import { finished } from 'stream/promises';
@@ -12,7 +12,7 @@ export class FileStorage {
   async saveFile(
     imageUrl: string,
   ): Promise<{ base64File: string; hash: string }> {
-    const fileStoragePath = this.configService.get<string>('fs.path');
+    const fileStoragePath = this.configService.get<string>('fs.folderName');
     const result = await this.downloadFileAndSave({
       url: imageUrl,
       destination: fileStoragePath,
@@ -23,43 +23,51 @@ export class FileStorage {
   async downloadFileAndSave(input: { url: string; destination: string }) {
     const { url, destination } = input;
     const res = await fetch(url);
-    if (!fs.existsSync(destination)) await fs.promises.mkdir(destination);
+    if (!fs.existsSync(destination))
+      await fs.promises.mkdir(destination, { recursive: true });
 
-    // Create a write stream with the hash
+    // Create a write stream to save the file
     const fileStream = fs.createWriteStream(
       path.resolve(`./${destination}`, 'tempFile'),
       { flags: 'wx' },
     );
-    const hashStream = crypto.createHash('sha256');
 
-    const chunks = [];
-    fileStream.on('data', (chunk) => chunks.push(chunk));
+    // Pipe the response body to the file stream
+    await finished(Readable.from(res.body as any).pipe(fileStream));
 
-    // Pipe the response body through the hash stream and then to the file stream
-    await finished(
-      Readable.from(res.body as any)
-        .pipe(hashStream)
-        .pipe(fileStream),
+    // Read the file back into a buffer
+    const fileBuffer = fs.readFileSync(
+      path.resolve(`./${destination}`, 'tempFile'),
     );
 
-    const hash = hashStream.digest('hex');
+    // Create a hash of the file content
+    const hash = crypto.createHash('sha256').update(fileBuffer).digest('hex');
 
+    // Rename the file with the hashed name
     fs.renameSync(
       path.resolve(`./${destination}`, 'tempFile'),
       path.resolve(`./${destination}`, `${hash}.jpg`),
     );
 
-    const fileBuffer = Buffer.concat(chunks);
-
+    // Convert the buffer to a base64 string
     const base64File = fileBuffer.toString('base64');
 
     return { base64File, hash };
   }
-
   async getFileBase64(hash: string): Promise<string> {
-    const fileStoragePath = this.configService.get<string>('fs.path');
-    const filePath = path.join(__dirname, fileStoragePath, `${hash}.jpg`);
+    const filePath = this._getFilePath(hash);
     const buffer = fs.readFileSync(filePath);
     return buffer?.toString('base64');
+  }
+
+  async deleteFile(hash: string): Promise<void> {
+    const filePath = this._getFilePath(hash);
+    fs.unlinkSync(filePath);
+  }
+
+  private _getFilePath(hash: string) {
+    const folderName = this.configService.get<string>('fs.folderName');
+    const filePath = path.resolve(`./${folderName}`, `${hash}.jpg`);
+    return filePath;
   }
 }

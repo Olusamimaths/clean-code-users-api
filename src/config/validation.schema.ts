@@ -7,4 +7,5 @@ export const validationSchema = Joi.object({
   PORT: Joi.number().default(3000),
   DATABASE_URL: Joi.string().required(),
   REQRES_API_URL: Joi.string().required(),
+  FILE_STORAGE_FOLDER_NAME: Joi.string().required(),
 });

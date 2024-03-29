@@ -6,4 +6,7 @@ export const configuration = () => ({
   reqres: {
     url: process.env.REQRES_API_URL,
   },
+  fs: {
+    folderName: process.env.FILE_STORAGE_FOLDER_NAME,
+  },
 });

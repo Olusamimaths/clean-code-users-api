@@ -5,7 +5,6 @@ import { Injectable } from '@nestjs/common';
 import { UserFactoryService } from './user-factory.service';
 import { AvatarFactoryService } from '../avatar';
 import { FileStorage } from '@/lib/file-storage';
-import { GetAvatarResponse } from '@/core/dtos/responses';
 
 @Injectable()
 export class UserUseCase {
@@ -22,27 +21,38 @@ export class UserUseCase {
     return this.dataServices.users.create(user);
   }
 
-  async getUser(userId: number): Promise<User> {
+  async getUser(userId: string): Promise<User> {
     return this.reqresService.get(userId);
   }
 
-  async getUserBase64Avatar(userId: string): Promise<GetAvatarResponse> {
-    const existingAvatar = await this.dataServices.avatars.get(`${userId}`);
+  async getUserBase64Avatar(userId: string): Promise<string> {
+    const existingAvatar = await this.dataServices.avatars.getOne({ userId });
     if (existingAvatar) {
-      const base64File = await this.fileService.getFileBase64(
-        existingAvatar.hash,
-      );
-      return GetAvatarResponse.from(base64File);
+      console.log('Avatar already exists..');
+      return await this.fileService.getFileBase64(existingAvatar.hash);
     }
 
     const avatarUrl = await this.reqresService.getAvatarUrl(userId);
     const { hash, base64File } = await this.fileService.saveFile(avatarUrl);
 
     const avatar = this.avatarFactoryService.createNewAvatar({
-      userId: `${userId}`,
+      userId,
       hash,
     });
     await this.dataServices.avatars.create(avatar);
-    return GetAvatarResponse.from(base64File);
+    return base64File;
+  }
+
+  async deleteUserAvatar(userId: string): Promise<boolean> {
+    try {
+      const result = await this.dataServices.avatars.getOne({ userId });
+      if (!result) return true;
+      await this.dataServices.avatars.delete(userId);
+      await this.fileService.deleteFile(result.hash);
+      return true;
+    } catch (error) {
+      console.error(error);
+      return false;
+    }
   }
 }

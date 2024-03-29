@@ -22,6 +22,13 @@ export class MongoBaseRepository<T> implements IGenericRepository<T> {
       .exec() as Promise<T>;
   }
 
+  getOne(query: any): Promise<T> {
+    return this._repository
+      .findOne(query)
+      .populate(this._populateOnFind)
+      .exec() as Promise<T>;
+  }
+
   create(item: T): Promise<T> {
     const _id = new IdGenerator().newId();
     return this._repository.create({ _id, ...item });

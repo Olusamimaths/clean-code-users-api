@@ -1,9 +1,11 @@
-import { BadRequestException, Inject, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import fetch, { RequestInit, Response } from 'node-fetch';
 import { IHttpResponse, IHttpService } from './types';
 
 @Injectable()
 export class HttpService implements IHttpService {
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  constructor() {}
   public async post<T = any>(
     url: string,
     body: Record<string, string | any>,
@@ -17,11 +19,11 @@ export class HttpService implements IHttpService {
       };
 
       const response: Response = await fetch(url, options);
-      const data: T = await response.json();
+      const data: any = await response.json();
 
       return {
         status: response.status,
-        data,
+        data: data?.data as T,
       };
     } catch (error) {
       console.error(error);
@@ -40,11 +42,11 @@ export class HttpService implements IHttpService {
       };
 
       const response: Response = await fetch(url, options);
-      const data: T = await response.json();
+      const data: any = await response.json();
 
       return {
         status: response.status,
-        data,
+        data: data?.data as T,
       };
     } catch (error) {
       console.error(error);

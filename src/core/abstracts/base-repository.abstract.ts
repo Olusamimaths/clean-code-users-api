@@ -7,6 +7,7 @@ export interface IWriterRepository<T> {
 export interface IReaderRepository<T> {
   getAll(): Promise<T[]>;
   get(id: string): Promise<T>;
+  getOne(query: any): Promise<T>;
 }
 
 export interface IGenericRepository<T>
