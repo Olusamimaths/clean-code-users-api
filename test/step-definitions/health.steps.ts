@@ -24,14 +24,14 @@ export class HealthSteps {
     await this.context.app.init();
   }
 
-  @when(/I request the "([^"]*)" endpoint/)
+  @when(/I make a GET request to "([^"]*)"/)
   public async callToHealthEndpoint(endpoint: string) {
     this.context.response = await request(this.context.app.getHttpServer()).get(
       endpoint,
     );
   }
 
-  @then(/I should receive a response with status code (\d+)/)
+  @then(/the response status code should be (\d+)/)
   public assertStatusCode(statusCode: number) {
     assert.equal(this.context.response.status, statusCode);
   }

@@ -1,10 +1,12 @@
 let common = [
-  'test/features/**/*.feature', // Specify feature files
+  'test/features/**/*.feature', // Specify our feature files
   '--require-module ts-node/register', // Load TypeScript module
-  '--require-module tsconfig-paths/register', // Load tsconfig paths
   '--require test/step-definitions/**/*.ts', // Load step definitions
+  '--require-module tsconfig-paths/register', // Load tsconfig paths
   '--format progress-bar', // Load custom formatter
   '--format @cucumber/pretty-formatter',
 ].join(' ');
 
-module.exports = { default: common };
+module.exports = {
+  default: common,
+};
