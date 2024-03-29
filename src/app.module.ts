@@ -6,10 +6,9 @@ import { ConfigModule } from '@nestjs/config';
 import { AllExceptionsFilter } from './exception-filters';
 import { getEnvFileName } from './config';
 import { configuration, validationSchema } from '@config/index';
-import { UserModule } from './use-cases/user/user.module';
-import { DataServicesModule } from './services/data-services/data-services.module';
-import { MongoDataServicesModule } from './frameworks/data-services/mongo/mongo-data-services.module';
+import { UserUseCaseModule } from '@/use-cases/user/';
 import { MongooseModule } from '@nestjs/mongoose';
+import { UserController } from '@/controllers';
 
 @Module({
   imports: [
@@ -20,11 +19,9 @@ import { MongooseModule } from '@nestjs/mongoose';
       validationSchema,
     }),
     MongooseModule.forRoot(process.env.DATABASE_URL),
-    UserModule,
-    DataServicesModule,
-    MongoDataServicesModule,
+    UserUseCaseModule,
   ],
-  controllers: [AppController],
+  controllers: [AppController, UserController],
   providers: [
     {
       provide: APP_FILTER,

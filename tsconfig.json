@@ -21,7 +21,11 @@
     "paths": {
       "@/*": ["src/*"],
       "@config/*": ["src/config/*"],
-      "@core/*": ["src/core/*"]
+      "@core/*": ["src/core/*"],
+      "@use-cases/*": ["src/use-cases/*"],
+      "@controllers/*": ["src/controllers/*"],
+      "@frameworks/*": ["src/frameworks/*"],
+      "@services/*": ["src/services/*"]
     }
   }
 }

@@ -6,5 +6,6 @@ import { UserFactoryService } from './user-factory.service';
 @Module({
   imports: [DataServicesModule],
   providers: [UserUseCase, UserFactoryService],
+  exports: [UserUseCase, UserFactoryService],
 })
-export class UserModule {}
+export class UserUseCaseModule {}

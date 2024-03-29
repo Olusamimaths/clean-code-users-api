@@ -31,12 +31,12 @@ export class HealthSteps {
     );
   }
 
-  @then(/the response status code should be (\d+)/)
+  @then(/the health response status code should be (\d+)/)
   public assertStatusCode(statusCode: number) {
     assert.equal(this.context.response.status, statusCode);
   }
 
-  @then(/the response should contain:/)
+  @then(/the health response should contain:/)
   public responseContainsStatus(table: any) {
     const expectedStatus = table.rowsHash().status;
     assert.equal(this.context.response.body.status, expectedStatus);

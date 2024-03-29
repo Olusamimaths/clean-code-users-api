@@ -25,6 +25,8 @@ export class AllExceptionsFilter implements ExceptionFilter {
       timestamp: new Date().toISOString(),
       path: httpAdapter.getRequestUrl(ctx.getRequest()),
     };
+    // Log exception - might also send to external service like Sentry
+    console.log({ exception });
     httpAdapter.reply(ctx.getResponse(), responseBody, httpStatus);
   }
 }

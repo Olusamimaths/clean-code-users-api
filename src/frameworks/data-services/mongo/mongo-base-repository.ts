@@ -1,5 +1,6 @@
 import { Model } from 'mongoose';
 import { IGenericRepository } from '@/core/abstracts';
+import { IdGenerator } from '@/lib';
 
 export class MongoBaseRepository<T> implements IGenericRepository<T> {
   private _repository: Model<T>;
@@ -22,7 +23,8 @@ export class MongoBaseRepository<T> implements IGenericRepository<T> {
   }
 
   create(item: T): Promise<T> {
-    return this._repository.create(item);
+    const _id = new IdGenerator().newId();
+    return this._repository.create({ _id, ...item });
   }
 
   update(id: number, item: T) {
