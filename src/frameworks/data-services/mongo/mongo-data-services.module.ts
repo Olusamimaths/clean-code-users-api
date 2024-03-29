@@ -7,7 +7,6 @@ import { UserModel, UserSchema } from './model';
 @Module({
   imports: [
     MongooseModule.forFeature([{ name: UserModel.name, schema: UserSchema }]),
-    MongooseModule.forRoot('mongodb://localhost:27017/nestjs'),
   ],
   providers: [
     {
