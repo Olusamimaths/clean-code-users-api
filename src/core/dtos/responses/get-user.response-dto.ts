@@ -1,6 +1,6 @@
 import { User } from '@/core/entities';
 
-export class CreateUserResponse {
+export class GetUserResponse {
   id: string;
   fullName: string;
   firstName: string;
@@ -8,8 +8,8 @@ export class CreateUserResponse {
   email: string;
   avatar: string;
 
-  public static from(user: User): CreateUserResponse {
-    const response = new CreateUserResponse();
+  public static from(user: User): GetUserResponse {
+    const response = new GetUserResponse();
     response.id = user.id;
     response.fullName = `${user.firstName} ${user.lastName}`;
     response.firstName = user.firstName;

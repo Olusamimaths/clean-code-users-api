@@ -1,18 +1,30 @@
 import { CreateUserDto } from '@/core/dtos';
-import { CreateUserResponse } from '@/core/dtos/responses';
+import { GetUserResponse, GetAvatarResponse } from '@/core/dtos/responses';
 import { UserUseCase } from '@/use-cases/user/user.use-case';
-import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Param,
+  Post,
+} from '@nestjs/common';
 
-@Controller('api/users')
+@Controller()
 export class UserController {
   constructor(private readonly userUseCase: UserUseCase) {}
 
-  @Post()
+  @Post('api/users')
   @HttpCode(HttpStatus.CREATED)
-  async createUser(
-    @Body() userDto: CreateUserDto,
-  ): Promise<CreateUserResponse> {
+  async createUser(@Body() userDto: CreateUserDto): Promise<GetUserResponse> {
     const user = await this.userUseCase.createUser(userDto);
-    return CreateUserResponse.from(user);
+    return GetUserResponse.from(user);
+  }
+
+  @Get('api/user/:userId/avatar')
+  @HttpCode(HttpStatus.OK)
+  async getUser(@Param('userId') userId: string): Promise<GetAvatarResponse> {
+    return this.userUseCase.getUser(userId);
   }
 }

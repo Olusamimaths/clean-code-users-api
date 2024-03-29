@@ -62,7 +62,7 @@ export class UserSteps {
   }
 
   @then(/the user creation response should contain:/)
-  public createUserResponseContainsStatus(table: any) {
+  public GetUserResponseContainsStatus(table: any) {
     const resultObj = table.rowsHash();
     const expectedFirstname = resultObj.firstName;
     assert.equal(this.context.response.body.firstName, expectedFirstname);
