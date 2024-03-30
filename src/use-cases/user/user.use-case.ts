@@ -8,7 +8,7 @@ import {
 } from '@/core/abstracts';
 import { CreateUserDto } from '@/core/dtos';
 import { User } from '@/core/entities';
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { UserFactoryService } from './user-factory.service';
 import { AvatarFactoryService } from '../avatar';
 
@@ -25,7 +25,14 @@ export class UserUseCase {
   ) {}
 
   async createUser(createUserDto: CreateUserDto): Promise<User> {
+    createUserDto.email = createUserDto.email.toLowerCase();
     const user = this.userFactoryService.createNewUser(createUserDto);
+    const userExists = await this.dataServices.users.getOne({
+      email: user.email,
+    });
+    if (userExists) {
+      throw new BadRequestException('User with email already exists');
+    }
     const newUser = await this.dataServices.users.create(user);
     await this._sendWelcomeEmail(newUser);
     await this.eventBusService.send(BusEvents.USER_CREATED, newUser);

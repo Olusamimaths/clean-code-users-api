@@ -24,6 +24,10 @@ export class AllExceptionsFilter implements ExceptionFilter {
       statusCode: httpStatus,
       timestamp: new Date().toISOString(),
       path: httpAdapter.getRequestUrl(ctx.getRequest()),
+      message:
+        exception instanceof Error
+          ? exception.message
+          : 'Internal Server Error',
     };
     // Log exception - might also send to external service like Sentry
     console.log({ exception });
