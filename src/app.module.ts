@@ -9,6 +9,7 @@ import { configuration, validationSchema } from '@config/index';
 import { UserUseCaseModule } from '@/use-cases/user/';
 import { MongooseModule } from '@nestjs/mongoose';
 import { UserController } from '@/controllers';
+import { EventBusServicesModule } from './services/event-bus';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { UserController } from '@/controllers';
     }),
     MongooseModule.forRoot(process.env.DATABASE_URL),
     UserUseCaseModule,
+    EventBusServicesModule,
   ],
   controllers: [AppController, UserController],
   providers: [

@@ -8,4 +8,8 @@ export const validationSchema = Joi.object({
   DATABASE_URL: Joi.string().required(),
   REQRES_API_URL: Joi.string().required(),
   FILE_STORAGE_FOLDER_NAME: Joi.string().required(),
+  RABBITMQ_USER: Joi.string().required(),
+  RABBITMQ_PASSWORD: Joi.string().required(),
+  RABBITMQ_HOST: Joi.string().required(),
+  RABBITMQ_QUEUE_NAME: Joi.string().required(),
 });

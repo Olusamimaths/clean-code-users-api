@@ -1,24 +1,37 @@
 version: '3.8'
 
 services:
-#  app:
-#     build: .
-#     ports:
-#       - "3000:3000"
-#     environment:
-#       - DATABASE_URL=mongodb://mongo:27017/mydatabase
-#     volumes:
-#       - .:/usr/src/app
-#     depends_on:
-#       - mongo
+  #  app:
+  #     build: .
+  #     ports:
+  #       - "3000:3000"
+  #     environment:
+  #       - DATABASE_URL=mongodb://mongo:27017/mydatabase
+  #     volumes:
+  #       - .:/usr/src/app
+  #     depends_on:
+  #       - mongo
 
- mongo:
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    hostname: rabbitmq
+    volumes:
+      - /var/lib/rabbitmq
+    ports:
+      - '5672:5672'
+      - '15672:15672'
+    env_file:
+      - ./rabbitmq.env
+
+  mongo:
     container_name: payever_mongo
     image: mongo
     ports:
-      - "27017:27017"
+      - '27017:27017'
     volumes:
       - mongo-data:/data/db
 
 volumes:
- mongo-data:
+  rabbit_data:
+  mongo-data:

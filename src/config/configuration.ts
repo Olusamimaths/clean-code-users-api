@@ -9,4 +9,10 @@ export const configuration = () => ({
   fs: {
     folderName: process.env.FILE_STORAGE_FOLDER_NAME,
   },
+  rabbitmq: {
+    user: process.env.RABBITMQ_USER,
+    password: process.env.RABBITMQ_PASSWORD,
+    host: process.env.RABBITMQ_HOST,
+    queue_name: process.env.RABBITMQ_QUEUE_NAME,
+  },
 });

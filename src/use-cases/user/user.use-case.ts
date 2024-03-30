@@ -1,4 +1,10 @@
-import { IDataService, IReqresService } from '@/core/abstracts';
+import {
+  BusEvents,
+  IDataService,
+  IEventBusService,
+  IMailService,
+  IReqresService,
+} from '@/core/abstracts';
 import { CreateUserDto } from '@/core/dtos';
 import { User } from '@/core/entities';
 import { Injectable } from '@nestjs/common';
@@ -14,11 +20,25 @@ export class UserUseCase {
     private readonly avatarFactoryService: AvatarFactoryService,
     private readonly reqresService: IReqresService,
     private readonly fileService: FileStorage,
+    private readonly mailService: IMailService,
+    private readonly eventBusService: IEventBusService,
   ) {}
 
   async createUser(createUserDto: CreateUserDto): Promise<User> {
     const user = this.userFactoryService.createNewUser(createUserDto);
-    return this.dataServices.users.create(user);
+    const newUser = await this.dataServices.users.create(user);
+    await this._sendWelcomeEmail(newUser);
+    await this.eventBusService.send(BusEvents.USER_CREATED, newUser);
+    return newUser;
+  }
+
+  private async _sendWelcomeEmail(newUser: User) {
+    const emailData = {
+      to: newUser.email,
+      subject: 'Welcome to our platform',
+      text: `Welcome ${newUser.firstName} ${newUser.lastName}`,
+    };
+    await this.mailService.sendEmail(emailData);
   }
 
   async getUser(userId: string): Promise<User> {
