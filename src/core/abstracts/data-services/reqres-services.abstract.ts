@@ -1,4 +1,4 @@
-import { User } from '../entities';
+import { User } from '@/core/entities';
 
 export abstract class IReqresService {
   abstract get(id: string): Promise<User>;

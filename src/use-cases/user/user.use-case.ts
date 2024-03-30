@@ -2,6 +2,7 @@ import {
   BusEvents,
   IDataService,
   IEventBusService,
+  IFileStorage,
   IMailService,
   IReqresService,
 } from '@/core/abstracts';
@@ -10,7 +11,6 @@ import { User } from '@/core/entities';
 import { Injectable } from '@nestjs/common';
 import { UserFactoryService } from './user-factory.service';
 import { AvatarFactoryService } from '../avatar';
-import { FileStorage } from '@/lib/file-storage';
 
 @Injectable()
 export class UserUseCase {
@@ -19,7 +19,7 @@ export class UserUseCase {
     private readonly userFactoryService: UserFactoryService,
     private readonly avatarFactoryService: AvatarFactoryService,
     private readonly reqresService: IReqresService,
-    private readonly fileService: FileStorage,
+    private readonly fileService: IFileStorage,
     private readonly mailService: IMailService,
     private readonly eventBusService: IEventBusService,
   ) {}

@@ -5,13 +5,12 @@ import * as path from 'path';
 import { Readable } from 'stream';
 import { finished } from 'stream/promises';
 import { ConfigService } from '@nestjs/config';
+import { IFileStorage, FileResult } from '@/core/abstracts';
 
 @Injectable()
-export class FileStorage {
+export class FileStorage implements IFileStorage {
   constructor(private readonly configService: ConfigService) {}
-  async saveFile(
-    imageUrl: string,
-  ): Promise<{ base64File: string; hash: string }> {
+  async saveFile(imageUrl: string): Promise<FileResult> {
     const fileStoragePath = this.configService.get<string>('fs.folderName');
     const result = await this.downloadFileAndSave({
       url: imageUrl,
@@ -20,7 +19,10 @@ export class FileStorage {
     return result;
   }
 
-  async downloadFileAndSave(input: { url: string; destination: string }) {
+  async downloadFileAndSave(input: {
+    url: string;
+    destination: string;
+  }): Promise<FileResult> {
     const { url, destination } = input;
     const res = await fetch(url);
     if (!fs.existsSync(destination))
